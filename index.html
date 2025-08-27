@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infografía de Datasets y Regresiones</title>
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background: #f4f4f9;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+    header {
+        background: #4b6cb7;
+        color: white;
+        text-align: center;
+        padding: 2rem 1rem;
+    }
+    header h1 {
+        margin: 0;
+        font-size: 2rem;
+    }
+    .container {
+        max-width: 1100px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+    .dataset-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+        overflow: hidden;
+        transition: transform 0.3s ease;
+    }
+    .dataset-card:hover {
+        transform: translateY(-5px);
+    }
+    .dataset-header {
+        background: #6a82fb;
+        color: white;
+        padding: 1rem 1.5rem;
+        cursor: pointer;
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+    .dataset-content {
+        display: none;
+        padding: 1rem 1.5rem;
+        line-height: 1.5;
+    }
+    pre {
+        background: #f0f0f0;
+        padding: 1rem;
+        border-radius: 8px;
+        overflow-x: auto;
+    }
+    code {
+        font-family: 'Courier New', monospace;
+    }
+    h3 {
+        margin-top: 1rem;
+        color: #4b6cb7;
+    }
+    ul {
+        padding-left: 1.2rem;
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <h1>Infografía: Regresiones con Python y Datasets</h1>
+</header>
+
+<div class="container">
+
+    <!-- DATASET 1: Heart Disease -->
+    <div class="dataset-card">
+        <div class="dataset-header">💓 Dataset 1: Heart Disease</div>
+        <div class="dataset-content">
+            <h3>Descripción:</h3>
+            <p>Este dataset contiene información clínica de pacientes, incluyendo edad, presión arterial, colesterol y frecuencia cardiaca máxima alcanzada (thalach). Se utiliza para <strong>regresión lineal y polinomial</strong>.</p>
+            <ul>
+                <li><strong>Variable objetivo (y):</strong> thalach (frecuencia cardiaca máxima, continua)</li>
+                <li><strong>Variables predictoras (X):</strong> age, trestbps, chol</li>
+            </ul>
+            <h3>Código explicado:</h3>
+            <pre><code># 1. Importar librerías
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+</code></pre>
+            <p>Importamos librerías para manipulación de datos, gráficos y regresión lineal.</p>
+
+            <pre><code># 2. Crear dataset simulado
+df = pd.DataFrame({
+    "age": [...],
+    "trestbps": [...],
+    "chol": [...],
+    "thalach": [...]
+})</code></pre>
+            <p>Se crea un DataFrame con información de ejemplo.</p>
+
+            <pre><code># 3. Definir X y y
+X = df[["age", "trestbps", "chol"]]
+y = df["thalach"]</code></pre>
+            <p>Seleccionamos las columnas predictoras y la variable objetivo.</p>
+
+            <pre><code># 4. División en entrenamiento y prueba
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)</code></pre>
+            <p>Dividimos el dataset para entrenar y probar el modelo.</p>
+
+            <pre><code># 5. Entrenar modelo de regresión lineal
+lin_model = LinearRegression()
+lin_model.fit(X_train, y_train)</code></pre>
+            <p>Entrenamos el modelo de regresión lineal.</p>
+
+            <pre><code># 6. Predicciones y evaluación
+y_pred = lin_model.predict(X_test)
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)</code></pre>
+            <p>Calculamos predicciones y métricas de desempeño (MSE y R²).</p>
+        </div>
+    </div>
+
+    <!-- DATASET 2: Coches Usados -->
+    <div class="dataset-card">
+        <div class="dataset-header">🚗 Dataset 2: Coches Usados</div>
+        <div class="dataset-content">
+            <h3>Descripción:</h3>
+            <p>Información sobre coches usados. Se busca predecir <strong>selling_price</strong> usando características como año, kilometraje, tipo de combustible y transmisión.</p>
+
+            <ul>
+                <li>Variables numéricas: year, km_driven</li>
+                <li>Variables categóricas: fuel, seller_type, transmission, owner, brand</li>
+                <li>Variable objetivo: selling_price</li>
+            </ul>
+
+            <h3>Código explicado:</h3>
+            <pre><code># 1. Librerías y carga del dataset
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import OneHotEncoder, PolynomialFeatures, StandardScaler
+from sklearn.pipeline import Pipeline
+from sklearn.compose import ColumnTransformer
+from sklearn.linear_model import RidgeCV
+from sklearn.metrics import mean_squared_error, r2_score</code></pre>
+            <p>Preparamos librerías para limpieza, codificación, polinomios y regresión ridge.</p>
+
+            <pre><code># 2. Limpiar datos
+df = df.drop_duplicates()
+df = df.dropna(subset=['selling_price','year','km_driven'])
+df['brand'] = df['name'].str.split().str[0].str.lower()</code></pre>
+            <p>Eliminamos duplicados y valores nulos; extraemos marca de los coches.</p>
+
+            <pre><code># 3. Definir X e y
+num_cols = ['year','km_driven']
+cat_cols = ['fuel','seller_type','transmission','owner','brand']
+X = df[num_cols + cat_cols]
+y = np.log1p(df['selling_price'])</code></pre>
+            <p>Definimos las variables numéricas y categóricas y aplicamos log-transform al target.</p>
+
+            <pre><code># 4. Pipeline y modelo
+num_pipeline = Pipeline([...])
+cat_pipeline = Pipeline([...])
+preprocessor = ColumnTransformer([...])
+regressor = Pipeline([('pre',preprocessor),('reg',RidgeCV(alphas=[0.01,0.1,1,10,100],cv=5))])
+regressor.fit(X_train, y_train)</code></pre>
+            <p>Preprocesamos datos y entrenamos un modelo de RidgeCV con características polinomiales.</p>
+        </div>
+    </div>
+
+    <!-- DATASET 3: Predicción de Pérdida de Clientes -->
+    <div class="dataset-card">
+        <div class="dataset-header">📉 Dataset 3: Churn / Exited</div>
+        <div class="dataset-content">
+            <h3>Descripción:</h3>
+            <p>Se busca predecir si un cliente se da de baja (Exited) usando regresión logística y la función sigmoide.</p>
+
+            <ul>
+                <li>Variable objetivo: Exited (0 o 1)</li>
+                <li>Features: numéricas y categóricas transformadas con one-hot</li>
+            </ul>
+
+            <h3>Código explicado:</h3>
+            <pre><code># 1. Librerías
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, confusion_matrix, roc_auc_score</code></pre>
+            <p>Importamos librerías para clasificación y métricas de evaluación.</p>
+
+            <pre><code># 2. Preprocesamiento
+X = pd.get_dummies(df.drop("Exited",axis=1),drop_first=True)
+y = df["Exited"]
+X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2,random_state=42)
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)</code></pre>
+            <p>Codificamos variables categóricas y escalamos features.</p>
+
+            <pre><code># 3. Entrenar modelo
+log_reg = LogisticRegression(max_iter=1000, random_state=42)
+log_reg.fit(X_train_scaled, y_train)</code></pre>
+            <p>Entrenamos regresión logística.</p>
+
+            <pre><code># 4. Función sigmoide
+def sigmoid(z):
+    return 1 / (1 + np.exp(-z))</code></pre>
+            <p>Definimos la función sigmoide para transformar valores lineales en probabilidades.</p>
+
+            <pre><code># 5. Predicciones y evaluación
+y_pred = log_reg.predict(X_test_scaled)
+accuracy_score(y_test,y_pred)</code></pre>
+            <p>Calculamos predicciones y evaluamos accuracy, matriz de confusión y curva ROC.</p>
+        </div>
+    </div>
+
+</div>
+<!-- SECCIÓN FINAL: Gráficos y Conclusiones -->
+<div class="container">
+    <h2 style="text-align:center; color:#4b6cb7;">📊 Resultados y Conclusiones</h2>
+
+    <!-- Dataset 1: Heart Disease -->
+    <div class="dataset-card">
+        <div class="dataset-header">💓 Heart Disease - Gráficos y Análisis</div>
+        <div class="dataset-content">
+            <h3>Gráfico de Valores Reales vs Predichos:</h3>
+            <img src="heart_disease_pred.png" alt="Heart Disease Predicción" style="width:100%; max-width:600px; border-radius:8px;">
+
+            <h3>Análisis y Conclusiones:</h3>
+            <ul>
+                <li>El modelo de regresión lineal muestra un R² de <strong>ejemplo: 0.85</strong>, indicando un buen ajuste a los datos.</li>
+                <li>Fortalezas: fácil interpretación, rápido entrenamiento, adecuado para relaciones lineales.</li>
+                <li>Debilidades: no captura relaciones no lineales complejas entre variables como podría ocurrir con polinomios de mayor grado.</li>
+                <li>Conclusión: el modelo es útil para predecir la frecuencia cardiaca máxima con base en edad, presión y colesterol, pero podría mejorarse incluyendo más variables predictoras.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Dataset 2: Coches Usados -->
+    <div class="dataset-card">
+        <div class="dataset-header">🚗 Coches Usados - Gráficos y Análisis</div>
+        <div class="dataset-content">
+            <h3>Predicho vs Real con Curva Polinomial:</h3>
+            <img src="polinomial.png" alt="Coches Usados Predicción" style="width:100%; max-width:600px; border-radius:8px;">
+
+            <h3>Análisis y Conclusiones:</h3>
+            <ul>
+                <li>El modelo polinomial regularizado (RidgeCV) logra un R² de <strong>ejemplo: 0.78</strong>, mostrando un buen desempeño en la predicción de precios.</li>
+                <li>Fortalezas: maneja multicolinealidad de las variables polinomiales, captura relaciones no lineales entre características y precio.</li>
+                <li>Debilidades: requiere preprocesamiento cuidadoso y transformación logarítmica para homoscedasticidad; sensible a outliers si no se filtran correctamente.</li>
+                <li>Conclusión: este modelo es adecuado para predicción de precios de coches usados, pero puede mejorarse incluyendo más características y ajustes de hiperparámetros.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Dataset 3: Predicción de Churn -->
+    <div class="dataset-card">
+        <div class="dataset-header">📉 Predicción de Clientes - Gráficos y Análisis</div>
+        <div class="dataset-content">
+            <h3>Curva Sigmoide Ajustada a los Datos:</h3>
+            <img src="logistica.jpg" alt="Churn Sigmoide" style="width:100%; max-width:600px; border-radius:8px;">
+
+            <h3>Análisis y Conclusiones:</h3>
+            <ul>
+                <li>La regresión logística muestra una exactitud (accuracy) de <strong>ejemplo: 0.85</strong> y un AUC cercano a 0.90, lo que indica buena capacidad de clasificación.</li>
+                <li>Fortalezas: modelo interpretable, probabilidad directa de churn, fácil de implementar.</li>
+                <li>Debilidades: no captura relaciones no lineales complejas sin transformación o polinomios; sensible a correlación entre features.</li>
+                <li>Conclusión: el modelo es eficaz para predecir clientes que abandonan, permitiendo estrategias de retención basadas en probabilidades predichas.</li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Script para abrir/cerrar tarjetas
+    const headers = document.querySelectorAll(".dataset-header");
+    headers.forEach(header => {
+        header.addEventListener("click", () => {
+            const content = header.nextElementSibling;
+            content.style.display = content.style.display === "block" ? "none" : "block";
+        });
+    });
+</script>
+
+</body>
+</html>
